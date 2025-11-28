@@ -1,0 +1,20 @@
+services:
+  selenium:
+    image: selenium/standalone-chrome:latest
+    container_name: selenium
+    shm_size: "2gb"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4444/wd/hub/status" ]
+      interval: 5s
+      retries: 10
+      timeout: 3s
+
+  pixai:
+    build: .
+    env_file:
+      # Be sure to set USE_DOCKER_SELENIUM=true
+      # and configure the SELENIUM_REMOTE_URL variable
+      - .env
+    depends_on:
+      selenium:
+        condition: service_healthy
