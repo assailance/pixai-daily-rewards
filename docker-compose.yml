@@ -10,6 +10,8 @@ services:
       timeout: 3s
 
   pixai:
+    # Build image or use this image:
+    # ghcr.io/assailance/pixai-daily-rewards:v0.5
     build: .
     env_file:
       # Be sure to set USE_DOCKER_SELENIUM=true
