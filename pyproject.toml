@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=64.0.0"]
+build-backend = "setuptools.build_meta"  # uses setuptools for package building
+
+[project]
+name = "pixai-daily-rewards"
+dynamic = ["version"]
+description = "PixAI Daily Rewards Claimer"
+requires-python = ">=3.12"
+dependencies = [
+    "pytelegrambotapi>=4.29.1",
+    "python-dotenv>=1.2.1",
+    "selenium>=4.38.0",
+]
+
+[tool.setuptools]
+packages = []
+include-package-data = false
+
+[tool.ruff]
+exclude = [
+    ".git",
+    ".ruff_cache",
+    ".venv",
+]
+line-length = 110
+indent-width = 4
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort imports
+    "A",   # flake8-annotations
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "YTT", # flake8-2020
+    "C4",  # simplify comprehensions
+    "FBT", # avoid boolean trap
+    "G",   # logging format
+    "N",   # conform to PEP8 naming rules
+    "RET", # return values
+]
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+docstring-code-format = true
