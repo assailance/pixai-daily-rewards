@@ -30,7 +30,7 @@ PIXAI_TOKEN: str = os.environ["PIXAI_TOKEN"]
 PIXAI_URL: str = os.environ["PIXAI_URL"]
 
 if not all((PIXAI_TOKEN, PIXAI_URL)):
-    raise RuntimeError("Missing required environment variables")
+    raise RuntimeError("PIXAI_TOKEN and PIXAI_URL are required")
 
 USE_TELEGRAM: bool = os.getenv("USE_TELEGRAM", "false").lower() == "true"
 BOT_TOKEN: str | None = os.getenv("BOT_TOKEN")
