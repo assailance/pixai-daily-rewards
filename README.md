@@ -1,3 +1,5 @@
+<img src="images/preview.png" alt="pixai-daily-rewards"/>
+
 Script for **automatic** receipt of **daily rewards** on <a href="https://pixai.art">PixAI</a>.
 
 ## 🚀 Quick Start
