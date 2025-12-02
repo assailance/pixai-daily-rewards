@@ -1,6 +1,7 @@
 import logging
 import os
 import time
+from typing import cast
 
 from dotenv import load_dotenv
 from selenium import webdriver
@@ -25,18 +26,18 @@ DEFAULT_WAIT_TIMEOUT = 20
 BALANCE_XPATH = "/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/section/div[1]/span/a/span"
 CLAIM_BUTTON_XPATH = "/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/section/div[2]/div[1]/div[2]/button"
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = os.getenv("CHAT_ID")
-PIXAI_TOKEN = os.getenv("PIXAI_TOKEN")
-PIXAI_URL = os.getenv("PIXAI_URL")
+BOT_TOKEN: str = os.environ["BOT_TOKEN"]
+CHAT_ID: str = os.environ["CHAT_ID"]
+PIXAI_TOKEN: str = os.environ["PIXAI_TOKEN"]
+PIXAI_URL: str = os.environ["PIXAI_URL"]
 
 if not all((BOT_TOKEN, CHAT_ID, PIXAI_TOKEN, PIXAI_URL)):
     raise RuntimeError("Missing required environment variables")
 
-USE_DOCKER = os.getenv("USE_DOCKER_SELENIUM", "false").lower() == "true"
-SELENIUM_REMOTE_URL = os.getenv("SELENIUM_REMOTE_URL")
-CHROMEBINARY_PATH = os.getenv("CHROMEBINARY_PATH")
-CHROMEDRIVER_PATH = os.getenv("CHROMEDRIVER_PATH")
+USE_DOCKER: bool = os.getenv("USE_DOCKER_SELENIUM", "false").lower() == "true"
+SELENIUM_REMOTE_URL: str | None = os.getenv("SELENIUM_REMOTE_URL")
+CHROMEBINARY_PATH: str | None = os.getenv("CHROMEBINARY_PATH")
+CHROMEDRIVER_PATH: str | None = os.getenv("CHROMEDRIVER_PATH")
 
 if USE_DOCKER and not SELENIUM_REMOTE_URL:
     raise RuntimeError("SELENIUM_REMOTE_URL is required when USE_DOCKER is true")
@@ -89,11 +90,11 @@ def initialize_driver() -> WebDriver:
     if USE_DOCKER:
         logger.info("Docker using detected")
         driver = webdriver.Remote(
-            command_executor=SELENIUM_REMOTE_URL,
+            command_executor=cast(str, SELENIUM_REMOTE_URL),
             options=options,
         )
     else:
-        options.binary_location = CHROMEBINARY_PATH
+        options.binary_location = cast(str, CHROMEBINARY_PATH)
         options.add_argument("--headless=new")
         service = Service(CHROMEDRIVER_PATH)
         driver = webdriver.Chrome(service=service, options=options)
