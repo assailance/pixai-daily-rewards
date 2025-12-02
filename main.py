@@ -128,7 +128,7 @@ def main_logic(driver: WebDriver, tn: TelegramNotifier | None) -> None:
     logger.info("Attempting to claim rewards...")
     is_claimed = claim_rewards(driver)
     if not is_claimed:
-        logger.warning("Daily rewards is already claimed")
+        logger.info("Daily rewards is already claimed")
         if tn:
             tn.send_already_claimed_message(current_balance)
         return
