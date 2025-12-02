@@ -4,14 +4,14 @@ services:
     container_name: selenium
     shm_size: "2gb"
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:4444/wd/hub/status" ]
+      test: ["CMD", "curl", "-f", "http://localhost:4444/wd/hub/status"]
       interval: 5s
       retries: 10
       timeout: 3s
 
   pixai:
     # Build image or use this image:
-    # ghcr.io/assailance/pixai-daily-rewards:v0.5
+    # ghcr.io/assailance/pixai-daily-rewards:v0.6
     build: .
     env_file:
       # Be sure to set USE_DOCKER_SELENIUM=true
