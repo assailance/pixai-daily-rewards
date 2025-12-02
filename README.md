@@ -13,7 +13,7 @@ cd pixai-daily-rewards
 docker compose run --rm pixai && docker compose logs -f -t
 ```
 
-## Running without docker
+## 🛠️ Running without docker
 
 1. Download **chrome** (binary) and **chromedriver** of the required version
 2. Install **dependencies**:
@@ -63,3 +63,20 @@ crontab -e
 # Set the execution time and file path
 30 16 * * * cd /opt/pixai-daily-rewards && venv/bin/python main.py >> main.log 2>&1
 ```
+
+## ⚙️ Environment variables
+
+Read the description of environment variables and configure them correctly:
+
+| Name | Description |
+| :--: | ----------- |
+| **PIXAI_TOKEN** | Token for authorization in PixAI (can be obtained from cookies) |
+| **PIXAI_URL** | A link to a page with a button for receiving rewards. Example: https://pixai.art/@qwerty/artworks |
+| **USE_TELEGRAM** | Enable or disable sending notifications in Telegram |
+| **BOT_TOKEN** | Your Telegram bot's token (required if `USE_TELEGRAM=True`) |
+| **CHAT_ID** | Chat ID for sending notifications (required if `USE_TELEGRAM=True`) |
+| **USE_DOCKER_SELENIUM** | Enable or disable running Selenium using Docker |
+| **SELENIUM_REMOTE_URL** | Selenium remote control link (required if `USE_DOCKER_SELENIUM=True`). Example: http://selenium:4444/wd/hub |
+| **CHROMEDRIVER_PATH** | Local path to chromedriver (required if `USE_DOCKER_SELENIUM=False`) |
+| **CHROMEBINARY_PATH** | Local path to chrome binary (required if `USE_DOCKER_SELENIUM=False`) |
+
