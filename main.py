@@ -154,6 +154,9 @@ def run() -> None:
             cast(str, CHAT_ID),
             PIXAI_URL,
         )
+        logger.info("Telegram notifications are ENABLED")
+    else:
+        logger.info("Telegram notifications are DISABLED")
 
     logger.info("Initializing driver...")
     driver = initialize_driver()
