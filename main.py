@@ -73,7 +73,7 @@ def claim_rewards(driver: webdriver.Chrome) -> bool:
     return True
 
 
-def initialize_driver() -> webdriver.Chrome:
+def initialize_driver() -> webdriver.Chrome | webdriver.Remote:
     """
     Создаёт и возвращает объект Chrome WebDriver
     """
