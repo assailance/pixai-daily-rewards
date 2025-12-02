@@ -7,6 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -44,7 +45,7 @@ if not USE_DOCKER and not all((CHROMEBINARY_PATH, CHROMEDRIVER_PATH)):
     raise RuntimeError("CHROMEBINARY_PATH and CHROMEDRIVER_PATH are required when USE_DOCKER is false")
 
 
-def get_balance(driver: webdriver.Chrome) -> str:
+def get_balance(driver: WebDriver) -> str:
     """
     Возвращает текст текущего баланса
     """
@@ -56,7 +57,7 @@ def get_balance(driver: webdriver.Chrome) -> str:
     )
 
 
-def claim_rewards(driver: webdriver.Chrome) -> bool:
+def claim_rewards(driver: WebDriver) -> bool:
     """
     Нажимает кнопку получения наград
     """
@@ -73,7 +74,7 @@ def claim_rewards(driver: webdriver.Chrome) -> bool:
     return True
 
 
-def initialize_driver() -> webdriver.Chrome | webdriver.Remote:
+def initialize_driver() -> WebDriver:
     """
     Создаёт и возвращает объект Chrome WebDriver
     """
@@ -100,7 +101,7 @@ def initialize_driver() -> webdriver.Chrome | webdriver.Remote:
     return driver
 
 
-def main_logic(driver: webdriver.Chrome, tn: TelegramNotifier) -> None:
+def main_logic(driver: WebDriver, tn: TelegramNotifier) -> None:
     """
     Основная логика получения ежедневной награды
     """
