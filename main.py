@@ -26,13 +26,18 @@ DEFAULT_WAIT_TIMEOUT = 20
 BALANCE_XPATH = "/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/section/div[1]/span/a/span"
 CLAIM_BUTTON_XPATH = "/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/section/div[2]/div[1]/div[2]/button"
 
-BOT_TOKEN: str = os.environ["BOT_TOKEN"]
-CHAT_ID: str = os.environ["CHAT_ID"]
 PIXAI_TOKEN: str = os.environ["PIXAI_TOKEN"]
 PIXAI_URL: str = os.environ["PIXAI_URL"]
 
-if not all((BOT_TOKEN, CHAT_ID, PIXAI_TOKEN, PIXAI_URL)):
+if not all((PIXAI_TOKEN, PIXAI_URL)):
     raise RuntimeError("Missing required environment variables")
+
+USE_TELEGRAM: bool = os.getenv("USE_TELEGRAM", "false").lower() == "true"
+BOT_TOKEN: str | None = os.getenv("BOT_TOKEN")
+CHAT_ID: str | None = os.getenv("CHAT_ID")
+
+if USE_TELEGRAM and not all((BOT_TOKEN, CHAT_ID)):
+    raise RuntimeError("BOT_TOKEN and CHAT_ID are required when USE_TELEGRAM is true")
 
 USE_DOCKER: bool = os.getenv("USE_DOCKER_SELENIUM", "false").lower() == "true"
 SELENIUM_REMOTE_URL: str | None = os.getenv("SELENIUM_REMOTE_URL")
@@ -102,7 +107,7 @@ def initialize_driver() -> WebDriver:
     return driver
 
 
-def main_logic(driver: WebDriver, tn: TelegramNotifier) -> None:
+def main_logic(driver: WebDriver, tn: TelegramNotifier | None) -> None:
     """
     Основная логика получения ежедневной награды
     """
@@ -124,7 +129,8 @@ def main_logic(driver: WebDriver, tn: TelegramNotifier) -> None:
     is_claimed = claim_rewards(driver)
     if not is_claimed:
         logger.warning("Daily rewards is already claimed")
-        tn.send_already_claimed_message(current_balance)
+        if tn:
+            tn.send_already_claimed_message(current_balance)
         return
 
     logger.info("Rewards claimed. Waiting for balance update...")
@@ -132,7 +138,8 @@ def main_logic(driver: WebDriver, tn: TelegramNotifier) -> None:
 
     new_balance = get_balance(driver)
     logger.info("Rewards claimed successfully. New balance: %s", new_balance)
-    tn.send_successfully_claimed_message(new_balance)
+    if tn:
+        tn.send_successfully_claimed_message(new_balance)
 
 
 def run() -> None:
@@ -140,11 +147,13 @@ def run() -> None:
     Точка входа в программу
     """
 
-    tn = TelegramNotifier(
-        BOT_TOKEN,
-        CHAT_ID,
-        PIXAI_URL,
-    )
+    tn = None
+    if USE_TELEGRAM:
+        tn = TelegramNotifier(
+            cast(str, BOT_TOKEN),
+            cast(str, CHAT_ID),
+            PIXAI_URL,
+        )
 
     logger.info("Initializing driver...")
     driver = initialize_driver()
@@ -154,7 +163,8 @@ def run() -> None:
         main_logic(driver, tn)
     except Exception as e:
         logger.exception("Failed claiming daily rewards")
-        tn.send_error_message(str(e))
+        if tn:
+            tn.send_error_message(str(e))
     finally:
         driver.quit()
 
