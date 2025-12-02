@@ -1,7 +1,7 @@
 import logging
+import time
 
 from telebot import TeleBot
-from telebot.apihelper import ApiException
 
 logger = logging.getLogger(__name__)
 
@@ -24,14 +24,17 @@ class TelegramNotifier:
         self._url = url
 
     def _send_message(self, message: str) -> None:
-        logger.info("Send notification...")
-        try:
-            self._bot.send_message(self._chat_id, message)
-        except ApiException:
-            logger.exception("Failed to send notification")
-            logger.info("Retry to send notification...")
-            self._bot.send_message(self._chat_id, message)
-        logger.info("Notification successfully sent")
+        for attempt in range(3):
+            logger.info("Send notification (attempt №%s)...", attempt + 1)
+            try:
+                self._bot.send_message(self._chat_id, message)
+                logger.info("Notification successfully sent")
+                break
+            except Exception:
+                logger.exception("Failed to send notification")
+                if attempt < 2:
+                    logger.info("Waiting for 10 seconds...")
+                    time.sleep(10)
 
     def send_already_claimed_message(self, balance: str) -> None:
         message = self._ALREADY_CLAIMED_MESSAGE.format(balance, self._url)
