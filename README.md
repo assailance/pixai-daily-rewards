@@ -12,7 +12,7 @@ cd pixai-daily-rewards
 
 # Run docker (pre-configure environment variables
 # to specify USE_DOCKER_SELENIUM=True and SELENIUM_REMOTE_URL)
-docker compose run --rm pixai && docker compose logs -f -t
+docker compose run --rm pixai
 ```
 
 ## 🛠️ Running without docker
@@ -64,6 +64,9 @@ crontab -e
 # Insert run command
 # Set the execution time and file path
 30 16 * * * cd /opt/pixai-daily-rewards && venv/bin/python main.py >> main.log 2>&1
+
+# Or using Docker
+30 16 * * * cd /opt/pixai-daily-rewards && docker compose run --rm pixai >> main.log 2>&1 && docker stop selenium
 ```
 
 ## ⚙️ Environment variables
