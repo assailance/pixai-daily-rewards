@@ -27,3 +27,5 @@ Dockerfile
 .venv
 venv
 .env*
+README.md
+images
