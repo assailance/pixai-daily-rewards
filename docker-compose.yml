@@ -11,7 +11,7 @@ services:
 
   pixai:
     # Build image or use this image:
-    # ghcr.io/assailance/pixai-daily-rewards:v0.6
+    # ghcr.io/assailance/pixai-daily-rewards:v0.0.1
     build: .
     env_file:
       # Be sure to set USE_DOCKER_SELENIUM=true
